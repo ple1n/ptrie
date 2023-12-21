@@ -103,6 +103,10 @@ The `serde` feature adds Serde `Serialize` and `Deserialize` traits to the `Trie
 ptrie = { version = "0.5", features = ["serde"] }
 ```
 
+## 🛠️ Contributing
+
+Contributions are welcome, checkout the [`CONTRIBUTING.md`](https://github.com/vemonet/ptrie/blob/main/CONTRIBUTING.md) for instructions to run the project in development.
+
 ## 📜 License
 
 [MIT License](https://opensource.org/licenses/MIT)

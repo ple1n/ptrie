@@ -25,9 +25,14 @@ repos:
 -   repo: local
     hooks:
     -   id: rustfmt
-        name: 🦀 Format Rust files
+        name: 🧹 Format Rust files
         description: Check if all files follow the rustfmt style
         entry: cargo fmt
+        language: system
+        pass_filenames: false
+    -   id: clippy
+        name: 📎 Lint with Clippy
+        entry: cargo clippy --all --all-targets --all-features
         language: system
         pass_filenames: false
     # -   id: git-cliff

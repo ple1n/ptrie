@@ -38,6 +38,13 @@ cargo tarpaulin -p ptrie --doc --tests --out html
 
 > Start web server for the cov report: `python -m http.server`
 
+### 🧹 Format and lint
+
+```bash
+cargo fmt
+cargo clippy --all --all-targets --all-features
+```
+
 ### 📚 Docs
 
 Generate docs locally:
