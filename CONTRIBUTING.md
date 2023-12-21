@@ -71,6 +71,7 @@ Publishing artifacts will be done by the `build.yml` workflow, make sure you hav
 
    ```bash
    git tag -a v0.5.0 -m "v0.5.0"
+   git push origin v0.5.0
    git cliff -o CHANGELOG.md
    ```
 

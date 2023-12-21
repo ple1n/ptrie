@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.5.0](https://github.com/vemonet/ptrie/compare/0.4.0..v0.5.0) - 2023-12-21
 
 ### ⛰️ Features
 
@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Update readme, add contributing.md, add git cliff to generate changelog, add pre-commit to automatically fmt and update changelog - ([61da9f9](https://github.com/vemonet/ptrie/commit/61da9f9456793d786ca3bb04719b27aa34f95759))
+- Improve readme examples - ([50c3acb](https://github.com/vemonet/ptrie/commit/50c3acb6f26157e4a27c345bfdb6ba9da38d0b38))
 
 ### 🧪 Testing
 

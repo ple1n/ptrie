@@ -1,5 +1,4 @@
 # See https://pre-commit.com for more information
-# See https://pre-commit.com/hooks.html for more hooks
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
@@ -16,6 +15,13 @@ repos:
         name: 🪚 Fix end of files
     -   id: trailing-whitespace
         name: ✂️  Trim trailing whitespaces
+-   repo: https://github.com/crate-ci/typos
+    rev: v1.16.25
+    hooks:
+    -   id: typos
+        name: ✒️  Check typos
+        exclude: ^CHANGELOG.md$
+
 -   repo: local
     hooks:
     -   id: rustfmt
