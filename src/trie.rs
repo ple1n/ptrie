@@ -386,7 +386,7 @@ where
     type Item = (Vec<K>, V); // Yield key-value pairs
 
     fn next(&mut self) -> Option<Self::Item> {
-        while let Some((node_id, mut path)) = self.stack.pop() {
+        while let Some((node_id, path)) = self.stack.pop() {
             let node = &self.trie.nodes[node_id];
             // Push children to the stack with updated path
             for &(ref key_part, child_id) in &node.children {

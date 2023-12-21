@@ -91,7 +91,7 @@ assert_eq!(trie.get_value("app".bytes()), Some("App"));
 assert_eq!(trie.get_value("none".bytes()), None);
 
 for (k, v) in trie.iter() {
-    println!("kv: {} {}", k, v);
+    println!("kv: {:?} {}", k, v);
 }
 ```
 
