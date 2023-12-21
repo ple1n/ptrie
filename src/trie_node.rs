@@ -1,28 +1,10 @@
-// MIT License
-//
-// Copyright (c) 2018 Alexander Serebryakov
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::cmp::{Eq, Ord};
 
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone)]
 pub struct TrieNode<T> {
     pub value: Option<usize>,
     pub children: Vec<(T, usize)>,
@@ -37,10 +19,13 @@ impl<T: Eq + Ord + Clone> TrieNode<T> {
     }
 
     pub fn find(&self, key: &T) -> Option<usize> {
-        if let Ok(idx) = self.children.binary_search_by(|x| x.0.cmp(key)) {
-            return Some(self.children[idx].1.clone());
+        if self.children.is_empty() {
+            // Slightly improves performance by avoiding closure creation in further code
+            return None;
         }
-
+        if let Ok(idx) = self.children.binary_search_by(|x| x.0.cmp(key)) {
+            return Some(self.children[idx].1);
+        }
         None
     }
 
@@ -54,7 +39,7 @@ impl<T: Eq + Ord + Clone> TrieNode<T> {
     }
 
     pub fn get_value(&self) -> Option<usize> {
-        self.value.clone()
+        self.value
     }
 
     pub fn may_be_leaf(&self) -> bool {
