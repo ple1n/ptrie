@@ -8,20 +8,28 @@ if [ "$#" -ne 1 ]; then
 fi
 new_version=$1
 
-# Update version in Cargo.toml
+echo ""
+echo "  ⏫ Update version in Cargo.toml"
+echo ""
 sed -i "s/^version = \"[0-9]*\.[0-9]*\.[0-9]*\"\$/version = \"$new_version\"/" "Cargo.toml"
 git add Cargo.toml
 git commit -S -m "chore: Bump version to $new_version"
 git push
 
-# Create and push tag
+echo ""
+echo "  🏷️  Create and push tag"
+echo ""
 git tag -a v$new_version -m "v$new_version"
 git push origin v$new_version
 
 # Update changelog
+echo ""
+echo "  🏔️ Update changelog"
+echo ""
 git cliff -o CHANGELOG.md
 git add CHANGELOG.md
 git commit -S -m "chore: Update changelog"
 git push
 
-echo "🎉 $new_version released"
+echo ""
+echo "  🎉 Version $new_version released"
