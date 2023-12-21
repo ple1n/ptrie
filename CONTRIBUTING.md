@@ -70,9 +70,7 @@ Publishing artifacts will be done by the `build.yml` workflow, make sure you hav
 2. Bump the version in the `Cargo.toml` file, create a new tag with `git`, and update changelog using [`git-cliff`](https://git-cliff.org):
 
    ```bash
-   git tag -a v0.5.0 -m "v0.5.0"
-   git push origin v0.5.0
-   git cliff -o CHANGELOG.md
+   ./.github/release.sh 0.5.0
    ```
 
 3. Commit, and push. The `release.yml` workflow will automatically create the release on GitHub, and publish to crates.io.
