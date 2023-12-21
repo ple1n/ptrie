@@ -60,11 +60,11 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
     /// assert!(!t.is_empty());
     /// ```
     pub fn insert<I: Iterator<Item = K>>(&mut self, key: I, value: V) {
-        let mut node_id = 0usize;
-        if self.is_empty() {
-            node_id = self.create_new_node();
-        }
-
+        let mut node_id = if self.is_empty() {
+            self.create_new_node()
+        } else {
+            0usize
+        };
         for c in key {
             if let Some(id) = self.nodes[node_id].find(&c) {
                 node_id = id;
@@ -74,7 +74,16 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
                 node_id = new_node_id;
             }
         }
-
+        // NOTE: nicer syntax, but some lines missed by coverage
+        // for c in key {
+        //     node_id = self.nodes[node_id]
+        //         .find(&c)
+        //         .unwrap_or_else(|| {
+        //             let new_node_id = self.create_new_node();
+        //             self.nodes[node_id].insert(&c, new_node_id);
+        //             new_node_id
+        //         });
+        // }
         let value_id = match self.nodes[node_id].get_value() {
             Some(id) => {
                 self.values[id] = value;
@@ -85,7 +94,6 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
                 self.values.len() - 1
             }
         };
-
         self.nodes[node_id].set_value(value_id);
     }
 
@@ -191,6 +199,39 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
             })
     }
 
+    /// Returns a list of all prefixes in the trie for a given string, ordered from smaller to longer.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use ptrie::Trie;
+    ///
+    /// let mut trie = Trie::new();
+    /// trie.insert("abc".bytes(), "ABC");
+    /// trie.insert("abcd".bytes(), "ABCD");
+    /// trie.insert("abcde".bytes(), "ABCDE");
+    ///
+    /// let prefixes = trie.find_prefixes("abcd".bytes());
+    /// assert_eq!(prefixes, vec!["ABC", "ABCD"]);
+    /// assert_eq!(trie.find_prefixes("efghij".bytes()), Vec::<&str>::new());
+    /// assert_eq!(trie.find_prefixes("abz".bytes()), Vec::<&str>::new());
+    /// ```
+    pub fn find_prefixes<I: Iterator<Item = K>>(&self, key: I) -> Vec<V> {
+        let mut node_id = 0usize;
+        let mut prefixes = Vec::new();
+        for c in key {
+            if let Some(child_id) = self.nodes[node_id].find(&c) {
+                node_id = child_id;
+                if let Some(value_id) = self.nodes[node_id].get_value() {
+                    prefixes.push(self.values[value_id].clone());
+                }
+            } else {
+                break;
+            }
+        }
+        prefixes
+    }
+
     /// Finds the longest prefix in the `Trie` for a given string.
     ///
     /// # Example
@@ -225,39 +266,6 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
             }
         }
         last_value_id.map(|id| self.values[id].clone())
-    }
-
-    /// Returns a list of all prefixes in the trie for a given string, ordered from smaller to longer.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ptrie::Trie;
-    ///
-    /// let mut trie = Trie::new();
-    /// trie.insert("abc".bytes(), "ABC");
-    /// trie.insert("abcd".bytes(), "ABCD");
-    /// trie.insert("abcde".bytes(), "ABCDE");
-    ///
-    /// let prefixes = trie.find_prefixes("abcd".bytes());
-    /// assert_eq!(prefixes, vec!["ABC", "ABCD"]);
-    /// assert_eq!(trie.find_prefixes("efghij".bytes()), Vec::<&str>::new());
-    /// assert_eq!(trie.find_prefixes("abz".bytes()), Vec::<&str>::new());
-    /// ```
-    pub fn find_prefixes<I: Iterator<Item = K>>(&self, key: I) -> Vec<V> {
-        let mut node_id = 0usize;
-        let mut prefixes = Vec::new();
-        for c in key {
-            if let Some(child_id) = self.nodes[node_id].find(&c) {
-                node_id = child_id;
-                if let Some(value_id) = self.nodes[node_id].get_value() {
-                    prefixes.push(self.values[value_id].clone());
-                }
-            } else {
-                break;
-            }
-        }
-        prefixes
     }
 
     /// Returns a list of all strings in the trie that start with the given prefix.

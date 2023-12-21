@@ -35,7 +35,7 @@ The trie is particularly effective for operations involving common  prefix ident
 
 ### ✨ Find prefixes
 
-You can return all prefixes in the trie corresponding to a given string, sorted in ascending order of their length.
+You can return all prefixes in the trie corresponding to a given string, sorted in ascending order of their length, or directly the longest prefix.
 
 ```rust
 use ptrie::Trie;
@@ -49,6 +49,9 @@ trie.insert("abcde".bytes(), "ABCDE");
 
 let prefixes = trie.find_prefixes("abcd".bytes());
 assert_eq!(prefixes, vec!["A", "AB", "ABC"]);
+
+let longest = trie.find_longest_prefix("abcd".bytes());
+assert_eq!(longest, Some("ABC"));
 ```
 
 ### 🔍 Find postfixes

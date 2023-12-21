@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file.
 ### 🧪 Testing
 
 - Improve tests, add GitHub actions workflows for testing and releasing, remove travis CI, update benchmark script - ([8391056](https://github.com/vemonet/ptrie/commit/839105644ff00e1ac9a8fee08bf0c5f6eb2fddf8))
+- Fix tests - ([4203259](https://github.com/vemonet/ptrie/commit/42032593f3f5886ed198043d3983bc5231f72641))
+- Fix codecov upload - ([8666e6a](https://github.com/vemonet/ptrie/commit/8666e6a7eba82cdfbce4acf1d564564da9b10368))
 
 ## [0.4.0](https://github.com/vemonet/ptrie/compare/0.3.0..0.4.0) - 2018-07-09
 
