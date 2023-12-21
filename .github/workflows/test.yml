@@ -11,11 +11,18 @@ jobs:
   clippy:
     name: 📎 fmt and clippy
     runs-on: ubuntu-latest
+    env:
+      CARGO_TERM_COLOR: always
     steps:
       - uses: actions/checkout@v4
-      - run: rustup update && rustup component add clippy rustfmt
+      - run: |
+          rustup update
+          rustup toolchain install nightly
+          rustup default nightly
+          rustup component add clippy rustfmt
       - run: cargo fmt -- --check
       - run: cargo clippy --all --all-targets --all-features
+      - run: cargo bench
 
   test:
     name: 🧪 Tests

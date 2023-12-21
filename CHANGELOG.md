@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Add functions to find_prefixes, find_postfixes, and find_longest_prefix. Rename files - ([ccbae67](https://github.com/vemonet/ptrie/commit/ccbae673304c0d052e8625f2040b2a2005afc408))
 
+### 📚 Documentation
+
+- Update readme, add contributing.md, add git cliff to generate changelog, add pre-commit to automatically fmt and update changelog - ([61da9f9](https://github.com/vemonet/ptrie/commit/61da9f9456793d786ca3bb04719b27aa34f95759))
+
 ### 🧪 Testing
 
 - Improve tests, add GitHub actions workflows for testing and releasing, remove travis CI, update benchmark script - ([8391056](https://github.com/vemonet/ptrie/commit/839105644ff00e1ac9a8fee08bf0c5f6eb2fddf8))

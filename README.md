@@ -35,7 +35,7 @@ The trie is particularly effective for operations involving common  prefix ident
 
 ### ✨ Find prefixes
 
-PTrie can return all prefixes in the trie corresponding to a given string, sorted in ascending order of their length.
+You can return all prefixes in the trie corresponding to a given string, sorted in ascending order of their length.
 
 ```rust
 use ptrie::Trie;
@@ -53,7 +53,7 @@ assert_eq!(prefixes, vec!["A", "AB", "ABC"]);
 
 ### 🔍 Find postfixes
 
-PTrie can also find all strings in the trie that begin with a specified prefix.
+You can also find all strings in the trie that begin with a specified prefix.
 
 ```rust
 use ptrie::Trie;
@@ -71,7 +71,7 @@ assert_eq!(strings, vec!["App", "Apple", "Applet"]);
 
 ### 🔑 Key-based Retrieval Functions
 
-PTrie provides functions to check for the existence of a key and to retrieve the associated value.
+The crate provides functions to check for the existence of a key and to retrieve the associated value.
 
 ```rust
 use ptrie::Trie;

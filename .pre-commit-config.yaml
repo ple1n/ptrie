@@ -24,11 +24,11 @@ repos:
         entry: cargo fmt
         language: system
         pass_filenames: false
-    -   id: git-cliff
-        name: 🏔️ Update changelog
-        entry: git cliff -o CHANGELOG.md
-        language: system
-        pass_filenames: false
+    # -   id: git-cliff
+    #     name: 🏔️ Update changelog
+    #     entry: git cliff -o CHANGELOG.md
+    #     language: system
+    #     pass_filenames: false
 ci:
     autofix_commit_msg: 🎨 [pre-commit.ci] Auto format from pre-commit.com hooks
     autoupdate_commit_msg: ⬆ [pre-commit.ci] pre-commit autoupdate
