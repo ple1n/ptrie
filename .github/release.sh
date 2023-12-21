@@ -16,9 +16,6 @@ sed -i "s/^version = \"[0-9]*\.[0-9]*\.[0-9]*\"\$/version = \"$new_version\"/" "
 
 # Create and push tag
 git tag -a v$new_version -m "v$new_version"
-
 git push origin v$new_version
 
-git cliff -o CHANGELOG.md
-
-gmsg "🎉 $new_version released" || true
+echo "🎉 $new_version released"

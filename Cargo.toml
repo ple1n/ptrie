@@ -5,9 +5,9 @@ authors = [
     "Alexander Serebryakov <alex.serebr@gmail.com>",
     "Vincent Emonet <vincent.emonet@gmail.com>",
 ]
-description = """Generic trie implementation with a support of different key and value types,
-and common prefix search."""
-keywords = ["trie", "data-structures", "generic"]
+description = """Generic trie data structure implementation (prefix tree) with support for different key and value types,
+and functions to search for common prefixes or postfixes."""
+keywords = ["trie", "data-structures", "generic", "prefix-tree"]
 categories = ["data-structures"]
 homepage = "https://github.com/vemonet/ptrie"
 repository = "https://github.com/vemonet/ptrie.git"

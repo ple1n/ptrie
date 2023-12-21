@@ -23,9 +23,9 @@
     </a>
 </p>
 
-`PTrie` is a versatile implementation of the [trie data structure](https://en.wikipedia.org/wiki/Trie), tailored for efficient prefix searching within a collection of objects, such as strings, with no dependencies.
+`PTrie` is a generic implementation of the [trie data structure](https://en.wikipedia.org/wiki/Trie) with no dependencies, tailored for easy and efficient prefix and postfix search within a collection of objects, such as strings.
 
-The structure is defined as `Trie<K, V>`, where `K` represents the type of keys in each node, and `V` is the type of the associated values.
+The structure is defined as `Trie<K, V>`, where `K` represents the type of keys in each node (an iterator of the chain to index), and `V` is the type of the associated values (any object to which the key points to).
 
 ## 💭 Motivation
 
@@ -33,9 +33,11 @@ The trie is particularly effective for operations involving common  prefix ident
 
 ## 🚀 Usage
 
+Results are sorted in ascending order of their length.
+
 ### ✨ Find prefixes
 
-You can return all prefixes in the trie corresponding to a given string, sorted in ascending order of their length, or directly the longest prefix.
+You can return all prefixes in the trie that matches a given string, or directly retrieve the longest prefix.
 
 ```rust
 use ptrie::Trie;
@@ -56,7 +58,7 @@ assert_eq!(longest, Some("ABC"));
 
 ### 🔍 Find postfixes
 
-You can also find all strings in the trie that begin with a specified prefix.
+You can also find all postfixes in the trie, e.g. all strings which have the given string as a prefix, and extends it.
 
 ```rust
 use ptrie::Trie;
@@ -91,6 +93,10 @@ assert_eq!(trie.get_value("none".bytes()), None);
 ## 🏷️ Features
 
 The `serde` feature adds Serde `Serialize` and `Deserialize` traits to the `Trie` and `TrieNode` struct.
+
+```toml
+ptrie = { version = "0.5", features = ["serde"] }
+```
 
 ## 📜 License
 

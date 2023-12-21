@@ -56,6 +56,12 @@ Running benchmarks requires to enable rust nightly: `rustup default nightly`
 cargo bench
 ```
 
+### 🏔️ Update changelog
+
+```bash
+git cliff -o CHANGELOG.md
+```
+
 ## 🏷️ New release
 
 Publishing artifacts will be done by the `build.yml` workflow, make sure you have set the following tokens as secrets for this repository: `CRATES_IO_TOKEN`, `CODECOV_TOKEN`
@@ -67,10 +73,10 @@ Publishing artifacts will be done by the `build.yml` workflow, make sure you hav
    cargo outdated
    ```
 
-2. Bump the version in the `Cargo.toml` file, create a new tag with `git`, and update changelog using [`git-cliff`](https://git-cliff.org):
+2. Script to automatically bump the version, update the changelog, then create and push a new tag to GitHub:
 
    ```bash
    ./.github/release.sh 0.5.0
    ```
 
-3. Commit, and push. The `release.yml` workflow will automatically create the release on GitHub, and publish to crates.io.
+3. The `release.yml` workflow will automatically create the release on GitHub, and publish to crates.io.
