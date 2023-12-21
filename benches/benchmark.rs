@@ -1,5 +1,4 @@
 #![feature(test)]
-extern crate gtrie;
 extern crate test;
 
 use std::collections::HashMap;
@@ -23,23 +22,23 @@ fn generate_keys() -> Vec<String> {
 
 #[bench]
 fn trie_match(b: &mut Bencher) {
-    let mut t = gtrie::Trie::new();
+    let mut t = ptrie::Trie::new();
 
-    t.insert("test".chars(), String::from("test"));
+    t.insert("test".bytes(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.contains_key("test".chars()), true);
+        assert!(t.contains_key("test".bytes()));
     })
 }
 
 #[bench]
 fn trie_mismatch(b: &mut Bencher) {
-    let mut t = gtrie::Trie::new();
+    let mut t = ptrie::Trie::new();
 
-    t.insert("test".chars(), String::from("test"));
+    t.insert("test".bytes(), String::from("test"));
 
     b.iter(|| {
-        assert_eq!(t.contains_key("tst".chars()), false);
+        assert!(!t.contains_key("tst".bytes()));
     })
 }
 
@@ -70,84 +69,84 @@ fn hash_map_mismatch(b: &mut Bencher) {
 
 #[bench]
 fn trie_massive_match(b: &mut Bencher) {
-    let mut t = gtrie::Trie::new();
+    let mut t = ptrie::Trie::new();
     let keys = generate_keys();
 
     for key in &keys {
-        t.insert(key.chars(), key.clone());
+        t.insert(key.bytes(), key.clone());
     }
 
     b.iter(|| {
         for key in &keys {
-            assert_eq!(t.contains_key(key.chars()), true);
+            assert!(t.contains_key(key.bytes()));
         }
     })
 }
 
 #[bench]
 fn trie_massive_mismatch_on_0(b: &mut Bencher) {
-    let mut t = gtrie::Trie::new();
+    let mut t = ptrie::Trie::new();
     let mismatching = String::from("0999");
     let keys = generate_keys();
 
     for key in &keys {
-        t.insert(key.chars(), key.clone());
+        t.insert(key.bytes(), key.clone());
     }
 
     b.iter(|| {
         for _ in 0..keys.len() {
-            assert_eq!(t.contains_key(mismatching.chars()), false);
+            assert!(!t.contains_key(mismatching.bytes()));
         }
     })
 }
 
 #[bench]
 fn trie_massive_mismatch_on_1(b: &mut Bencher) {
-    let mut t = gtrie::Trie::new();
+    let mut t = ptrie::Trie::new();
     let mismatching = String::from("9099");
     let keys = generate_keys();
 
     for key in &keys {
-        t.insert(key.chars(), key.clone());
+        t.insert(key.bytes(), key.clone());
     }
 
     b.iter(|| {
         for _ in 0..keys.len() {
-            assert_eq!(t.contains_key(mismatching.chars()), false);
+            assert!(!t.contains_key(mismatching.bytes()));
         }
     })
 }
 
 #[bench]
 fn trie_massive_mismatch_on_2(b: &mut Bencher) {
-    let mut t = gtrie::Trie::new();
+    let mut t = ptrie::Trie::new();
     let mismatching = String::from("9909");
     let keys = generate_keys();
 
     for key in &keys {
-        t.insert(key.chars(), key.clone());
+        t.insert(key.bytes(), key.clone());
     }
 
     b.iter(|| {
         for _ in 0..keys.len() {
-            assert_eq!(t.contains_key(mismatching.chars()), false);
+            assert!(!t.contains_key(mismatching.bytes()));
         }
     })
 }
 
 #[bench]
 fn trie_massive_mismatch_on_3(b: &mut Bencher) {
-    let mut t = gtrie::Trie::new();
+    let mut t = ptrie::Trie::new();
     let mismatching = String::from("9990");
     let keys = generate_keys();
 
     for key in &keys {
-        t.insert(key.chars(), key.clone());
+        t.insert(key.bytes(), key.clone());
     }
 
     b.iter(|| {
         for _ in 0..keys.len() {
-            assert_eq!(t.contains_key(mismatching.chars()), false);
+            assert!(!t.contains_key(mismatching.bytes()));
         }
     })
 }
@@ -163,7 +162,7 @@ fn hash_map_massive_match(b: &mut Bencher) {
 
     b.iter(|| {
         for key in &keys {
-            assert_eq!(h.contains_key(key), true);
+            assert!(h.contains_key(key));
         }
     })
 }
@@ -180,7 +179,7 @@ fn hash_map_massive_mismatch_on_0(b: &mut Bencher) {
 
     b.iter(|| {
         for _ in 0..keys.len() {
-            assert_eq!(h.contains_key(&mismatching), false);
+            assert!(!h.contains_key(&mismatching));
         }
     })
 }
@@ -197,7 +196,50 @@ fn hash_map_massive_mismatch_on_0_one_symbol_key(b: &mut Bencher) {
 
     b.iter(|| {
         for _ in 0..keys.len() {
-            assert_eq!(h.contains_key(&mismatching), false);
+            assert!(!h.contains_key(&mismatching));
+        }
+    })
+}
+
+#[bench]
+fn trie_prefixes_match(b: &mut Bencher) {
+    let mut t = ptrie::Trie::new();
+    let keys = generate_keys();
+    for key in &keys {
+        t.insert(key.bytes(), key.clone());
+    }
+    b.iter(|| {
+        for key in &keys {
+            assert!(!t.find_prefixes(key.bytes()).is_empty());
+        }
+    })
+}
+
+#[bench]
+fn trie_postfixes_match(b: &mut Bencher) {
+    let mut t = ptrie::Trie::new();
+    let keys = generate_keys();
+    for key in &keys {
+        t.insert(key.bytes(), key.clone());
+    }
+    b.iter(|| {
+        for key in &keys {
+            assert!(!t.find_postfixes(key.bytes()).is_empty());
+        }
+    })
+}
+
+
+#[bench]
+fn trie_prefix_longest_match(b: &mut Bencher) {
+    let mut t = ptrie::Trie::new();
+    let keys = generate_keys();
+    for key in &keys {
+        t.insert(key.bytes(), key.clone());
+    }
+    b.iter(|| {
+        for key in &keys {
+            assert!(t.find_longest_prefix(key.bytes()).is_some());
         }
     })
 }
