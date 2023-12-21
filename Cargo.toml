@@ -1,6 +1,6 @@
 [package]
 name = "ptrie"
-version = "0.5.0"
+version = "0.5.2"
 authors = [
     "Alexander Serebryakov <alex.serebr@gmail.com>",
     "Vincent Emonet <vincent.emonet@gmail.com>",

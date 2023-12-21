@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1](https://github.com/vemonet/ptrie/compare/v0.5.0..v0.5.1) - 2023-12-21
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove typos check from release workflow and add it to pre-commit - ([6ac4326](https://github.com/vemonet/ptrie/commit/6ac4326d422377fe438dca7fb55ca1628497f4be))
+
 ## [0.5.0](https://github.com/vemonet/ptrie/compare/0.4.0..v0.5.0) - 2023-12-21
 
 ### ⛰️ Features
