@@ -229,7 +229,6 @@ fn trie_postfixes_match(b: &mut Bencher) {
     })
 }
 
-
 #[bench]
 fn trie_prefix_longest_match(b: &mut Bencher) {
     let mut t = ptrie::Trie::new();

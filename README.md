@@ -1,102 +1,94 @@
-# GTrie
+<h1 align="center">
+  🎄 Prefix Trie
+</h1>
 
-[![Build Status](https://travis-ci.org/aserebryakov/trie-rs.svg?branch=master)](https://travis-ci.org/aserebryakov/trie-rs)
+<p align="center">
+    <a href="https://crates.io/crates/ptrie">
+        <img alt="Crates.io" src="https://img.shields.io/crates/v/ptrie" />
+    </a>
+    <a href="https://github.com/vemonet/ptrie/actions/workflows/test.yml">
+        <img alt="Test" src="https://github.com/vemonet/ptrie/actions/workflows/test.yml/badge.svg" />
+    </a>
+    <a href="https://github.com/vemonet/ptrie/actions/workflows/release.yml">
+        <img alt="Release" src="https://github.com/vemonet/ptrie/actions/workflows/release.yml/badge.svg" />
+    </a>
+    <a href="https://docs.rs/ptrie">
+        <img alt="Documentation" src="https://docs.rs/ptrie/badge.svg" />
+    </a>
+    <a href="https://codecov.io/gh/vemonet/ptrie/branch/main">
+        <img src="https://codecov.io/gh/vemonet/ptrie/branch/main/graph/badge.svg" alt="Codecov status" />
+    </a>
+    <a href="https://github.com/vemonet/ptrie/blob/main/LICENSE">
+        <img alt="MIT license" src="https://img.shields.io/badge/License-MIT-brightgreen.svg" />
+    </a>
+</p>
 
-Trie is the library that implements the [trie](https://en.wikipedia.org/wiki/Trie).
+`PTrie` is a versatile implementation of the [trie data structure](https://en.wikipedia.org/wiki/Trie), tailored for efficient prefix searching within a collection of objects, such as strings, with no dependencies.
 
-Trie is a generic data structure, written `Trie<T, U>` where `T` is node key type and `U` is a
-value type.
+The structure is defined as `Trie<K, V>`, where `K` represents the type of keys in each node, and `V` is the type of the associated values.
 
+## 💭 Motivation
 
-# Motivation
+The trie is particularly effective for operations involving common  prefix identification and retrieval, making it a good choice for  applications that require fast and efficient prefix-based search  functionalities.
 
-Trie may be faster than other data structures in some cases.
+## 🚀 Usage
 
-For example, `Trie` may be used as a replacement for `std::HashMap` in case of a dictionary where
-the number of words in dictionary is significantly less than number of different words in the
-input and matching probability is low.
+### ✨ Find prefixes
 
-
-# Usage
+PTrie can return all prefixes in the trie corresponding to a given string, sorted in ascending order of their length.
 
 ```rust
-use gtrie::Trie;
+use ptrie::Trie;
 
-let mut t = Trie::new();
+let mut trie = Trie::new();
 
-t.insert("this".chars(), 1);
-t.insert("trie".chars(), 2);
-t.insert("contains".chars(), 3);
-t.insert("a".chars(), 4);
-t.insert("number".chars(), 5);
-t.insert("of".chars(), 6);
-t.insert("words".chars(), 7);
+trie.insert("a".bytes(), "A");
+trie.insert("ab".bytes(), "AB");
+trie.insert("abc".bytes(), "ABC");
+trie.insert("abcde".bytes(), "ABCDE");
 
-assert_eq!(t.contains_key("number".chars()), true);
-assert_eq!(t.contains_key("not_existing_key".chars()), false);
-assert_eq!(t.get_value("words".chars()), Some(7));
-assert_eq!(t.get_value("none".chars()), None);
+let prefixes = trie.find_prefixes("abcd".bytes());
+assert_eq!(prefixes, vec!["A", "AB", "ABC"]);
 ```
 
-# Benchmarks
+### 🔍 Find postfixes
 
-Benchmark `std::HashMap<String, String>` vs `gtrie::Trie` shows that `Trie` is
-significantly faster in the case of key mismatch but significantly slower in the case of
-matching key.
+PTrie can also find all strings in the trie that begin with a specified prefix.
 
-```
-$ cargo bench
-test hash_map_massive_match                        ... bench:     150,127 ns/iter (+/- 12,986)
-test hash_map_massive_mismatch_on_0                ... bench:      93,246 ns/iter (+/- 5,108)
-test hash_map_massive_mismatch_on_0_one_symbol_key ... bench:      93,706 ns/iter (+/- 5,908)
-test hash_map_match                                ... bench:          24 ns/iter (+/- 3)
-test hash_map_mismatch                             ... bench:          20 ns/iter (+/- 0)
-test trie_massive_match                            ... bench:     231,343 ns/iter (+/- 4,940)
-test trie_massive_mismatch_on_0                    ... bench:      28,743 ns/iter (+/- 8,401)
-test trie_massive_mismatch_on_1                    ... bench:      28,734 ns/iter (+/- 1,839)
-test trie_massive_mismatch_on_2                    ... bench:      28,760 ns/iter (+/- 2,582)
-test trie_massive_mismatch_on_3                    ... bench:      28,829 ns/iter (+/- 2,504)
-test trie_match                                    ... bench:          10 ns/iter (+/- 1)
-test trie_mismatch                                 ... bench:           5 ns/iter (+/- 0)
+```rust
+use ptrie::Trie;
+
+let mut trie = Trie::new();
+
+trie.insert("app".bytes(), "App");
+trie.insert("apple".bytes(), "Apple");
+trie.insert("applet".bytes(), "Applet");
+trie.insert("apricot".bytes(), "Apricot");
+
+let strings = trie.find_postfixes("app".bytes());
+assert_eq!(strings, vec!["App", "Apple", "Applet"]);
 ```
 
-## Important
+### 🔑 Key-based Retrieval Functions
 
-Search performance is highly dependent on the data stored in `Trie` and may be
-as significantly faster than `std::HashMap` as significantly slower.
+PTrie provides functions to check for the existence of a key and to retrieve the associated value.
 
+```rust
+use ptrie::Trie;
 
-# Contribution
+let mut trie = Trie::new();
+trie.insert("app".bytes(), "App");
 
-Source code and issues are hosted on GitHub:
+assert!(trie.contains_key("app".bytes()));
+assert!(!trie.contains_key("not_existing_key".bytes()));
+assert_eq!(trie.get_value("app".bytes()), Some("App"));
+assert_eq!(trie.get_value("none".bytes()), None);
+```
 
-    https://github.com/aserebryakov/trie-rs
+## 🏷️ Features
 
+The `serde` feature adds Serde `Serialize` and `Deserialize` traits to the `Trie` and `TrieNode` struct.
 
-# License
+## 📜 License
 
 [MIT License](https://opensource.org/licenses/MIT)
-
-
-# Changelog
-
-#### 0.4.0
-
-* Significant performance improvement due to switch to data oriented model
-
-#### 0.3.0
-
-* Significantly improved performance of the key mismatch case
-* API is updated to be closer to `std::HashMap`
-
-#### 0.2.1
-
-* Benchmarks are improved
-
-#### 0.2.0
-
-* API is updated to be closer to `std::HashMap`
-
-#### 0.1.1
-
-* Basic trie implentation
