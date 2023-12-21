@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3](https://github.com/vemonet/ptrie/compare/v0.5.2..v0.5.3) - 2023-12-21
+
+### ⚙️ Miscellaneous Tasks
+
+- Add bash script to easily perform a release - ([ba03b9b](https://github.com/vemonet/ptrie/commit/ba03b9b9681e3ff31ee3552776b74edecc7a8e52))
+- Update release script, improve readme - ([3e61eb0](https://github.com/vemonet/ptrie/commit/3e61eb066e620bca5fd4104bdd9996d323498a34))
+- Update codecov action version and readme - ([20e35cc](https://github.com/vemonet/ptrie/commit/20e35cc8a43ef60e06ac4205e31dce9b2abc5c33))
+
+### ⛰️ Features
+
+- Add simple iterator for the trie - ([a4da3f5](https://github.com/vemonet/ptrie/commit/a4da3f58a4e380bc7cbddf7d151d6c02c9a070a9))
+
+### 🐛 Bug Fixes
+
+- Fix print - ([59e4bb7](https://github.com/vemonet/ptrie/commit/59e4bb73cf9370d2337b6f46e05c948567170008))
+
 ## [0.5.2](https://github.com/vemonet/ptrie/compare/v0.5.1..v0.5.2) - 2023-12-21
 
 ### ⚙️ Miscellaneous Tasks
