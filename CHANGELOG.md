@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.4](https://github.com/vemonet/ptrie/compare/v0.5.3..v0.5.4) - 2023-12-21
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix release script - ([89b58ab](https://github.com/vemonet/ptrie/commit/89b58ab726512a2cd5fb905ae899660c241b2b3d))
+- Bump version to 0.5.4 - ([eb9c7bb](https://github.com/vemonet/ptrie/commit/eb9c7bb6b8d36443cabbbcb38a0b09497f07219c))
+
 ## [0.5.3](https://github.com/vemonet/ptrie/compare/v0.5.2..v0.5.3) - 2023-12-21
 
 ### ⚙️ Miscellaneous Tasks
