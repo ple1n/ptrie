@@ -74,20 +74,25 @@ let strings = trie.find_postfixes("app".bytes());
 assert_eq!(strings, vec!["App", "Apple", "Applet"]);
 ```
 
-### 🔑 Key-based Retrieval Functions
+### 🔑 Key-based retrieval functions
 
-The crate provides functions to check for the existence of a key and to retrieve the associated value.
+The crate provides functions to check for the existence of a key, to retrieve the associated value, or iterate the trie nodes.
 
 ```rust
 use ptrie::Trie;
 
 let mut trie = Trie::new();
 trie.insert("app".bytes(), "App");
+trie.insert("applet".bytes(), "Applet");
 
 assert!(trie.contains_key("app".bytes()));
 assert!(!trie.contains_key("not_existing_key".bytes()));
 assert_eq!(trie.get_value("app".bytes()), Some("App"));
 assert_eq!(trie.get_value("none".bytes()), None);
+
+for (k, v) in trie.iter() {
+    println!("kv: {} {}", k, v);
+}
 ```
 
 ## 🏷️ Features

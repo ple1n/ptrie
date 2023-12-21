@@ -332,11 +332,73 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
         self.nodes.push(TrieNode::new(None));
         self.nodes.len() - 1
     }
+
+    /// Iterate the nodes in the trie
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// use ptrie::Trie;
+    ///
+    /// let mut t = Trie::new();
+    /// let test = "test".bytes();
+    /// let tes = "tes".bytes();
+    ///
+    /// t.insert(test.clone(), String::from("test"));
+    /// t.insert(tes.clone(), String::from("tes"));
+    /// for (k, v) in t.iter() {
+    ///     assert!(std::str::from_utf8(&k).unwrap().starts_with("tes"));
+    ///     assert!(v.starts_with("tes"));
+    /// }
+    /// ```
+    pub fn iter(&self) -> TrieIterator<K, V> {
+        TrieIterator::new(self)
+    }
 }
 
 /// Implement the `Default` trait for `Trie` since we have a constructor that does not need arguments
 impl<T: Eq + Ord + Clone, U: Clone> Default for Trie<T, U> {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+/// Iterator for the `Trie` struct
+pub struct TrieIterator<'a, K, V> {
+    trie: &'a Trie<K, V>,
+    stack: Vec<(usize, Vec<K>)>, // Stack with node id and current path
+}
+
+impl<'a, K, V> TrieIterator<'a, K, V> {
+    fn new(trie: &'a Trie<K, V>) -> Self {
+        TrieIterator {
+            trie,
+            stack: vec![(0, Vec::new())], // Start with root node and empty path
+        }
+    }
+}
+
+impl<'a, K, V> Iterator for TrieIterator<'a, K, V>
+where
+    K: Eq + Ord + Clone,
+    V: Clone,
+{
+    type Item = (Vec<K>, V); // Yield key-value pairs
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while let Some((node_id, mut path)) = self.stack.pop() {
+            let node = &self.trie.nodes[node_id];
+            // Push children to the stack with updated path
+            for &(ref key_part, child_id) in &node.children {
+                let mut new_path = path.clone();
+                new_path.push(key_part.clone());
+                self.stack.push((child_id, new_path));
+            }
+            // Return value if it exists
+            if let Some(value_id) = node.get_value() {
+                return Some((path, self.trie.values[value_id].clone()));
+            }
+        }
+        None
     }
 }

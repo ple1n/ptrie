@@ -56,4 +56,18 @@ mod tests {
         assert!(t.is_empty());
         assert!(!t.contains_key(data));
     }
+
+    #[test]
+    fn iterator() {
+        let mut t = Trie::new();
+        let test = "test".bytes();
+        let tes = "tes".bytes();
+
+        t.insert(test.clone(), String::from("test"));
+        t.insert(tes.clone(), String::from("tes"));
+        for (k, v) in t.iter() {
+            assert!(std::str::from_utf8(&k).unwrap().starts_with("tes"));
+            assert!(v.starts_with("tes"));
+        }
+    }
 }
