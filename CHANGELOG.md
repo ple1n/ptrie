@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0](https://github.com/vemonet/ptrie/compare/v0.5.4..v0.6.0) - 2023-12-22
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([baef8a9](https://github.com/vemonet/ptrie/commit/baef8a948f6bc674c0da34c4102025dc759454e7))
+- Update release script and readme - ([e06dd4c](https://github.com/vemonet/ptrie/commit/e06dd4cf4e964957a930e76a96cf9a0113304556))
+- Bump version to 0.6.0 - ([15c6519](https://github.com/vemonet/ptrie/commit/15c6519949677850d9ef910940b8f5140faed87f))
+
+### 🚜 Refactor
+
+- [**breaking**] Rename `trie.get_value()` to `trie.get()` and return a reference to the value instead of the value to be closer to hashmap API - ([fd1e530](https://github.com/vemonet/ptrie/commit/fd1e5307825beb450c96acfaef5b7939ec894d3a))
+
+### 🧪 Testing
+
+- Add test for serde serialize feature - ([308a2ab](https://github.com/vemonet/ptrie/commit/308a2ab2e5d13dcbf50ebe009a15d4fc5989adca))
+
 ## [0.5.4](https://github.com/vemonet/ptrie/compare/v0.5.3..v0.5.4) - 2023-12-21
 
 ### ⚙️ Miscellaneous Tasks
