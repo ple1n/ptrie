@@ -27,13 +27,13 @@ pre-commit install
 Run tests:
 
 ```bash
-cargo test
+cargo test --all-features
 ```
 
 Tests with coverage:
 
 ```bash
-cargo tarpaulin -p ptrie --doc --tests --out html
+cargo tarpaulin -p ptrie --doc --tests --all-features --out html
 ```
 
 > Start web server for the cov report: `python -m http.server`

@@ -100,10 +100,8 @@ for (k, v) in trie.iter() {
 The `serde` feature adds Serde `Serialize` and `Deserialize` traits to the `Trie` and `TrieNode` struct.
 
 ```toml
-ptrie = { version = "0.5", features = ["serde"] }
+ptrie = { version = "0.6", features = ["serde"] }
 ```
-
-> ⚠️ Feature not yet tested
 
 ## 🛠️ Contributing
 

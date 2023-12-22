@@ -46,7 +46,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Generate code coverage
-        run: cargo tarpaulin -p ptrie --doc --tests --out xml
+        run: cargo tarpaulin -p ptrie --doc --tests --out xml --all-features
 
       - name: Upload to codecov.io
         uses: codecov/codecov-action@v3

@@ -70,4 +70,17 @@ mod tests {
             assert!(v.starts_with("tes"));
         }
     }
+
+    #[cfg(feature = "serde")]
+    #[test]
+    fn serde_serialize() {
+        use serde_json;
+        let mut trie = Trie::new();
+        trie.insert("key".bytes(), 42);
+        let serialized = serde_json::to_string(&trie).expect("Failed to serialize");
+        // println!("serialized! {}", serialized);
+        let deserialized: Trie<u8, i32> =
+            serde_json::from_str(&serialized).expect("Failed to deserialize");
+        assert_eq!(deserialized.get("key".bytes()), Some(42).as_ref());
+    }
 }
