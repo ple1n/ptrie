@@ -1,3 +1,5 @@
+//! Struct and functions for the `Trie` nodes
+
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;

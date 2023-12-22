@@ -87,8 +87,8 @@ trie.insert("applet".bytes(), "Applet");
 
 assert!(trie.contains_key("app".bytes()));
 assert!(!trie.contains_key("not_existing_key".bytes()));
-assert_eq!(trie.get_value("app".bytes()), Some("App"));
-assert_eq!(trie.get_value("none".bytes()), None);
+assert_eq!(trie.get("app".bytes()), Some("App").as_ref());
+assert_eq!(trie.get("none".bytes()), None);
 
 for (k, v) in trie.iter() {
     println!("kv: {:?} {}", k, v);

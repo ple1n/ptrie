@@ -1,3 +1,5 @@
+//! Struct and functions for the `Trie` data structure
+
 use crate::error::TrieError;
 use crate::trie_node::TrieNode;
 #[cfg(feature = "serde")]
@@ -153,17 +155,17 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
     /// let mut t = Trie::new();
     /// let data = "test".bytes();
     /// let another_data = "notintest".bytes();
-    /// assert_eq!(t.get_value(data.clone()), None);
+    /// assert_eq!(t.get(data.clone()), None);
     /// t.insert(data.clone(), 42);
     ///
-    /// assert_eq!(t.get_value(data), Some(42));
-    /// assert_eq!(t.get_value(another_data), None);
+    /// assert_eq!(t.get(data), Some(42).as_ref());
+    /// assert_eq!(t.get(another_data), None);
     /// ```
-    pub fn get_value<I: Iterator<Item = K>>(&self, key: I) -> Option<V> {
+    pub fn get<I: Iterator<Item = K>>(&self, key: I) -> Option<&V> {
         self.find_node(key)
             .and_then(|node_id| self.nodes[node_id].get_value())
             .and_then(|value_id| self.values.get(value_id))
-            .cloned()
+        // .cloned()
     }
 
     /// Sets the value pointed by a key
@@ -179,9 +181,9 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
     ///
     /// t.insert(data.clone(), 42);
     ///
-    /// assert_eq!(t.get_value(data.clone()), Some(42));
+    /// assert_eq!(t.get(data.clone()), Some(42).as_ref());
     /// assert!(t.set_value(data.clone(), 43).is_ok());
-    /// assert_eq!(t.get_value(data), Some(43));
+    /// assert_eq!(t.get(data), Some(43).as_ref());
     /// assert!(t.set_value(another_data, 39)
     ///     .map_err(|e| assert!(e.to_string().starts_with("Key not found")))
     ///     .is_err());
