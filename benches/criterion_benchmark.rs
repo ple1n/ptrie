@@ -140,6 +140,45 @@ fn trie_benchmark(c: &mut Criterion) {
             }
         });
     });
+
+    c.bench_function("trie_massive_prefixes_match", |b| {
+        let mut t = ptrie::Trie::new();
+        let keys = generate_keys();
+        for key in &keys {
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
+        }
+        b.iter(|| {
+            for key in &keys {
+                assert!(!t.find_prefixes(black_box(key.bytes())).is_empty());
+            }
+        });
+    });
+
+    c.bench_function("trie_massive_longest_prefixes_match", |b| {
+        let mut t = ptrie::Trie::new();
+        let keys = generate_keys();
+        for key in &keys {
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
+        }
+        b.iter(|| {
+            for key in &keys {
+                assert!(t.find_longest_prefix(black_box(key.bytes())).is_some());
+            }
+        });
+    });
+
+    c.bench_function("trie_massive_postfixes_match", |b| {
+        let mut t = ptrie::Trie::new();
+        let keys = generate_keys();
+        for key in &keys {
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
+        }
+        b.iter(|| {
+            for key in &keys {
+                assert!(!t.find_postfixes(black_box(key.bytes())).is_empty());
+            }
+        });
+    });
 }
 
 fn hashmap_benchmark(c: &mut Criterion) {
