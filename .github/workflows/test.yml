@@ -63,10 +63,11 @@ jobs:
           rustup default nightly
           rustup component add clippy rustfmt
 
-    - name: Checkout previous commit
+    - name: Checkout commit last release
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.before }}
+        ref: b0bf31a097a3099ddbebd801154c8929525894ae
+        fetch-depth: 0
 
     - name: Run benchmarks on previous commit
       run: |
