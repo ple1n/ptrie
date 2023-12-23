@@ -57,15 +57,11 @@ jobs:
     name: ⏱️ Benchmark
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
     - run: |
           rustup update
           rustup toolchain install nightly
           rustup default nightly
           rustup component add clippy rustfmt
-
-    - name: Run benchmarks
-      run: cargo bench
 
     - name: Checkout previous commit
       uses: actions/checkout@v4
@@ -75,7 +71,12 @@ jobs:
     - name: Run benchmarks on previous commit
       run: cargo bench
 
-    - name: Save benchmark result of previous commit
+    - uses: actions/checkout@v4
+
+    - name: Run benchmarks
+      run: cargo bench
+
+    - name: Upload benchmark results
       uses: actions/upload-artifact@v4
       with:
         name: benchmark
