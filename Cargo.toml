@@ -22,9 +22,16 @@ serde = { version = "1.0", optional = true, features = ["derive"] }
 
 [dev-dependencies]
 serde_json = "1.0"
+criterion = "0.5"
+
 
 [features]
 serde = ["dep:serde"]
 
 [profile.release]
 lto = true
+
+
+[[bench]]
+name = "criterion_benchmark"
+harness = false

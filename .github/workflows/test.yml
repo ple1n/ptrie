@@ -22,7 +22,6 @@ jobs:
           rustup component add clippy rustfmt
       - run: cargo fmt -- --check
       - run: cargo clippy --all --all-targets --all-features
-      - run: cargo bench
 
   test:
     name: 🧪 Tests
@@ -53,3 +52,33 @@ jobs:
         with:
           fail_ci_if_error: false
           token: ${{secrets.CODECOV_TOKEN}}
+
+  benchmark:
+    name: ⏱️ Benchmark
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - run: |
+          rustup update
+          rustup toolchain install nightly
+          rustup default nightly
+          rustup component add clippy rustfmt
+
+    - name: Run benchmarks
+      run: cargo bench
+
+    - name: Checkout previous commit
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.before }}
+
+    - name: Run benchmarks on previous commit
+      run: cargo bench
+
+    - name: Save benchmark result of previous commit
+      uses: actions/upload-artifact@v4
+      with:
+        name: benchmark
+        path: target/criterion/
