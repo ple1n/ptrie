@@ -50,10 +50,10 @@ trie.insert("abc".bytes(), "ABC");
 trie.insert("abcde".bytes(), "ABCDE");
 
 let prefixes = trie.find_prefixes("abcd".bytes());
-assert_eq!(prefixes, vec!["A", "AB", "ABC"]);
+assert_eq!(prefixes, vec![&"A", &"AB", &"ABC"]);
 
 let longest = trie.find_longest_prefix("abcd".bytes());
-assert_eq!(longest, Some("ABC"));
+assert_eq!(longest, Some("ABC").as_ref());
 ```
 
 ### 🔍 Find postfixes
@@ -71,7 +71,7 @@ trie.insert("applet".bytes(), "Applet");
 trie.insert("apricot".bytes(), "Apricot");
 
 let strings = trie.find_postfixes("app".bytes());
-assert_eq!(strings, vec!["App", "Apple", "Applet"]);
+assert_eq!(strings, vec![&"App", &"Apple", &"Applet"]);
 ```
 
 ### 🔑 Key-based retrieval functions
@@ -88,7 +88,7 @@ trie.insert("applet".bytes(), "Applet");
 assert!(trie.contains_key("app".bytes()));
 assert!(!trie.contains_key("not_existing_key".bytes()));
 assert_eq!(trie.get("app".bytes()), Some("App").as_ref());
-assert_eq!(trie.get("none".bytes()), None);
+assert_eq!(trie.get("none".bytes()), None.as_ref());
 
 for (k, v) in trie.iter() {
     println!("kv: {:?} {}", k, v);

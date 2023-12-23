@@ -64,9 +64,9 @@ mod tests {
         trie.insert("abcd".bytes(), "ABCD");
         trie.insert("abcde".bytes(), "ABCDE");
         let prefixes = trie.find_prefixes("abcd".bytes());
-        assert_eq!(prefixes, vec!["ABC", "ABCD"]);
-        assert_eq!(trie.find_prefixes("efghij".bytes()), Vec::<&str>::new());
-        assert_eq!(trie.find_prefixes("abz".bytes()), Vec::<&str>::new());
+        assert_eq!(prefixes, vec![&"ABC", &"ABCD"]);
+        assert_eq!(trie.find_prefixes("efghij".bytes()), Vec::<&&str>::new());
+        assert_eq!(trie.find_prefixes("abz".bytes()), Vec::<&&str>::new());
     }
 
     #[test]
