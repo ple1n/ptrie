@@ -71,7 +71,7 @@ jobs:
     - name: Run benchmarks on previous commit
       run: |
         cargo bench
-        git checkout main
+        git checkout refs/heads/main
 
     - name: Run benchmarks
       run: cargo bench
