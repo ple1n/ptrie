@@ -27,9 +27,9 @@ fn trie_benchmark(c: &mut Criterion) {
 
     c.bench_function("trie_mismatch", |b| {
         let mut t = ptrie::Trie::new();
-        t.insert("test".bytes(), String::from("test"));
+        t.insert(black_box("test".bytes()), black_box(String::from("test")));
         b.iter(|| {
-            assert!(!t.contains_key("tst".bytes()));
+            assert!(!t.contains_key(black_box("tst".bytes())));
         });
     });
 
@@ -37,11 +37,11 @@ fn trie_benchmark(c: &mut Criterion) {
         let mut t = ptrie::Trie::new();
         let keys = generate_keys();
         for key in &keys {
-            t.insert(key.bytes(), key.clone());
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
         }
         b.iter(|| {
             for key in &keys {
-                assert!(t.contains_key(key.bytes()));
+                assert!(t.contains_key(black_box(key.bytes())));
             }
         });
     });
@@ -50,14 +50,12 @@ fn trie_benchmark(c: &mut Criterion) {
         let mut t = ptrie::Trie::new();
         let mismatching = String::from("0999");
         let keys = generate_keys();
-
         for key in &keys {
-            t.insert(key.bytes(), key.clone());
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
         }
-
         b.iter(|| {
             for _ in 0..keys.len() {
-                assert!(!t.contains_key(mismatching.bytes()));
+                assert!(!t.contains_key(black_box(mismatching.bytes())));
             }
         });
     });
@@ -66,11 +64,9 @@ fn trie_benchmark(c: &mut Criterion) {
         let mut t = ptrie::Trie::new();
         let mismatching = String::from("9099");
         let keys = generate_keys();
-
         for key in &keys {
-            t.insert(key.bytes(), key.clone());
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
         }
-
         b.iter(|| {
             for _ in 0..keys.len() {
                 assert!(!t.contains_key(mismatching.bytes()));
@@ -82,14 +78,12 @@ fn trie_benchmark(c: &mut Criterion) {
         let mut t = ptrie::Trie::new();
         let mismatching = String::from("9909");
         let keys = generate_keys();
-
         for key in &keys {
-            t.insert(key.bytes(), key.clone());
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
         }
-
         b.iter(|| {
             for _ in 0..keys.len() {
-                assert!(!t.contains_key(mismatching.bytes()));
+                assert!(!t.contains_key(black_box(mismatching.bytes())));
             }
         });
     });
@@ -103,7 +97,7 @@ fn trie_benchmark(c: &mut Criterion) {
         }
         b.iter(|| {
             for _ in 0..keys.len() {
-                assert!(!t.contains_key(mismatching.bytes()));
+                assert!(!t.contains_key(black_box(mismatching.bytes())));
             }
         });
     });
@@ -112,11 +106,11 @@ fn trie_benchmark(c: &mut Criterion) {
         let mut t = ptrie::Trie::new();
         let keys = generate_keys();
         for key in &keys {
-            t.insert(key.bytes(), key.clone());
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
         }
         b.iter(|| {
             for key in &keys {
-                assert!(!t.find_prefixes(key.bytes()).is_empty());
+                assert!(!t.find_prefixes(black_box(key.bytes())).is_empty());
             }
         });
     });
@@ -125,11 +119,11 @@ fn trie_benchmark(c: &mut Criterion) {
         let mut t = ptrie::Trie::new();
         let keys = generate_keys();
         for key in &keys {
-            t.insert(key.bytes(), key.clone());
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
         }
         b.iter(|| {
             for key in &keys {
-                assert!(!t.find_postfixes(key.bytes()).is_empty());
+                assert!(!t.find_postfixes(black_box(key.bytes())).is_empty());
             }
         });
     });
@@ -138,11 +132,11 @@ fn trie_benchmark(c: &mut Criterion) {
         let mut t = ptrie::Trie::new();
         let keys = generate_keys();
         for key in &keys {
-            t.insert(key.bytes(), key.clone());
+            t.insert(black_box(key.bytes()), black_box(key.clone()));
         }
         b.iter(|| {
             for key in &keys {
-                assert!(t.find_longest_prefix(key.bytes()).is_some());
+                assert!(t.find_longest_prefix(black_box(key.bytes())).is_some());
             }
         });
     });
@@ -152,9 +146,7 @@ fn hashmap_benchmark(c: &mut Criterion) {
     c.bench_function("hashmap_match", |b| {
         let mut h = HashMap::new();
         let key = String::from("test");
-
         h.insert(key.clone(), true);
-
         b.iter(|| {
             h.get(&key);
         });
@@ -164,9 +156,7 @@ fn hashmap_benchmark(c: &mut Criterion) {
         let mut h = HashMap::new();
         let key = String::from("test");
         let notkey = String::from("tst");
-
         h.insert(key, true);
-
         b.iter(|| {
             h.get(&notkey);
         });
@@ -175,11 +165,9 @@ fn hashmap_benchmark(c: &mut Criterion) {
     c.bench_function("hashmap_massive_match", |b| {
         let mut h = HashMap::new();
         let keys = generate_keys();
-
         for key in &keys {
             h.insert(key.clone(), key.clone());
         }
-
         b.iter(|| {
             for key in &keys {
                 assert!(h.contains_key(key));
@@ -191,11 +179,9 @@ fn hashmap_benchmark(c: &mut Criterion) {
         let mut h = HashMap::new();
         let mismatching = String::from("0999");
         let keys = generate_keys();
-
         for key in &keys {
             h.insert(key.clone(), key.clone());
         }
-
         b.iter(|| {
             for _ in 0..keys.len() {
                 assert!(!h.contains_key(&mismatching));
@@ -207,11 +193,9 @@ fn hashmap_benchmark(c: &mut Criterion) {
         let mut h = HashMap::new();
         let mismatching = String::from("0");
         let keys = generate_keys();
-
         for key in &keys {
             h.insert(key.clone(), key.clone());
         }
-
         b.iter(|| {
             for _ in 0..keys.len() {
                 assert!(!h.contains_key(&mismatching));
