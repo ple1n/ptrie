@@ -69,9 +69,9 @@ jobs:
         ref: ${{ github.event.before }}
 
     - name: Run benchmarks on previous commit
-      run: cargo bench
-
-    - uses: actions/checkout@v4
+      run: |
+        cargo bench
+        git checkout main
 
     - name: Run benchmarks
       run: cargo bench
