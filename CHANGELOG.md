@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0](https://github.com/vemonet/ptrie/compare/v0.6.0..v0.7.0) - 2023-12-23
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([6c5b144](https://github.com/vemonet/ptrie/commit/6c5b144757a8e891f00c4277a153c33df6544479))
+- Fix benchmark in workflow - ([4761c49](https://github.com/vemonet/ptrie/commit/4761c49fb7c5de66d1e17a07217bd4cefbfed5a0))
+- Improve benchmark workflow - ([63324e2](https://github.com/vemonet/ptrie/commit/63324e2e4c72924ca40af252e79e7652f29867d2))
+- Improve benchmark workflow - ([4f423f5](https://github.com/vemonet/ptrie/commit/4f423f526fc3f0bbf563fc84929add76ef959ca1))
+- Fix benchmark workflow - ([2214f64](https://github.com/vemonet/ptrie/commit/2214f64a3681fb293454bd3c701ac8313e8f5a68))
+- Fix benchmark workflow - ([71660f5](https://github.com/vemonet/ptrie/commit/71660f5395fea61e39cf648ef1f34a6120013f2b))
+- Bump version to 0.7.0 - ([317466f](https://github.com/vemonet/ptrie/commit/317466fc706c9c4733fb574ea0a0de5dc87c3937))
+
+### ⚡ Performance
+
+- [**breaking**] Refactor the `Trie` and `TrieNode` structs to replace the 2 vectors used to store values and trie node, by the root node of the trie. The values are now directly stored in the TrieNode (instead of having integers to get values from an array), and the Trie only contains 1 field: the root node of the trie. This reduces amount of effective line of code from 127 to 97. - ([e7b9531](https://github.com/vemonet/ptrie/commit/e7b9531f146b85fd798b59dbac0b01de146042e5))
+
+### 🧪 Testing
+
+- Add benchmark with criterion, add benchmark job to test workflow - ([79a15d7](https://github.com/vemonet/ptrie/commit/79a15d7ddc9c24c9eca2336ad9d77163bfd1f919))
+- Improve criterion benchmark use of black_box - ([617b25e](https://github.com/vemonet/ptrie/commit/617b25eef6007b88280c770d89d973349c36859b))
+- Add massive benchmark for prefix/postfix - ([b0bf31a](https://github.com/vemonet/ptrie/commit/b0bf31a097a3099ddbebd801154c8929525894ae))
+
 ## [0.6.0](https://github.com/vemonet/ptrie/compare/v0.5.4..v0.6.0) - 2023-12-22
 
 ### ⚙️ Miscellaneous Tasks
