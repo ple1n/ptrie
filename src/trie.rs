@@ -31,56 +31,6 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
         }
     }
 
-    /// Checks that trie is empty
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ptrie::Trie;
-    ///
-    /// let t = Trie::<char, f64>::new();
-    /// assert!(t.is_empty());
-    /// ```
-    pub fn is_empty(&self) -> bool {
-        self.root.children.is_empty()
-    }
-
-    /// Adds a new key to the `Trie`
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ptrie::Trie;
-    ///
-    /// let mut t = Trie::new();
-    /// let data = "test".bytes();
-    /// t.insert(data.clone(), 42);
-    /// t.insert(data, 42);
-    /// t.insert("test2".bytes(), 43);
-    /// assert!(!t.is_empty());
-    /// ```
-    pub fn insert<I: Iterator<Item = K>>(&mut self, key: I, value: V) {
-        self.root.insert(key, value);
-    }
-
-    /// Clears the trie
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ptrie::Trie;
-    ///
-    /// let mut t = Trie::new();
-    /// let data = "test".bytes();
-    ///
-    /// t.insert(data, String::from("test"));
-    /// t.clear();
-    /// assert!(t.is_empty());
-    /// ```
-    pub fn clear(&mut self) {
-        self.root = TrieNode::default();
-    }
-
     /// Looks for the key in trie
     ///
     /// # Example
@@ -259,6 +209,56 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
         }
     }
 
+    /// Checks if the `Trie` is empty
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use ptrie::Trie;
+    ///
+    /// let t = Trie::<char, f64>::new();
+    /// assert!(t.is_empty());
+    /// ```
+    pub fn is_empty(&self) -> bool {
+        self.root.children.is_empty()
+    }
+
+    /// Clears the trie
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use ptrie::Trie;
+    ///
+    /// let mut t = Trie::new();
+    /// let data = "test".bytes();
+    ///
+    /// t.insert(data, String::from("test"));
+    /// t.clear();
+    /// assert!(t.is_empty());
+    /// ```
+    pub fn clear(&mut self) {
+        self.root = TrieNode::default();
+    }
+
+    /// Adds a new key to the `Trie`
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use ptrie::Trie;
+    ///
+    /// let mut t = Trie::new();
+    /// let data = "test".bytes();
+    /// t.insert(data.clone(), 42);
+    /// t.insert(data, 42);
+    /// t.insert("test2".bytes(), 43);
+    /// assert!(!t.is_empty());
+    /// ```
+    pub fn insert<I: Iterator<Item = K>>(&mut self, key: I, value: V) {
+        self.root.insert(key, value);
+    }
+
     /// Finds the node in the `Trie` for a given key
     ///
     /// Internal API
@@ -302,19 +302,22 @@ impl<T: Eq + Ord + Clone, U: Clone> Default for Trie<T, U> {
 
 /// Iterator for the `Trie` struct
 pub struct TrieIterator<'a, K: Eq + Ord + Clone, V> {
-    stack: Vec<(&'a TrieNode<K, V>, Vec<K>)>, // Stack with node reference and current path
+    // Stack with node reference and current path
+    stack: Vec<(&'a TrieNode<K, V>, Vec<K>)>,
 }
 
 impl<'a, K: Eq + Ord + Clone, V: Clone> TrieIterator<'a, K, V> {
     fn new(trie: &'a Trie<K, V>) -> Self {
         TrieIterator {
-            stack: vec![(&trie.root, Vec::new())], // Start with root node and empty path
+            // Start with root node and empty path
+            stack: vec![(&trie.root, Vec::new())],
         }
     }
 }
 
 impl<'a, K: Eq + Ord + Clone, V: Clone> Iterator for TrieIterator<'a, K, V> {
-    type Item = (Vec<K>, V); // Yield key-value pairs
+    // Yield key-value pairs
+    type Item = (Vec<K>, V);
     fn next(&mut self) -> Option<Self::Item> {
         while let Some((node, path)) = self.stack.pop() {
             // Push children to the stack with updated path

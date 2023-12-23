@@ -24,11 +24,11 @@ git push origin v$new_version
 
 # Update changelog
 echo ""
-echo "  🏔️ Update changelog"
+echo "  🏔️  Update CHANGELOG.md"
 echo ""
 git cliff -o CHANGELOG.md
 git add CHANGELOG.md
-git commit -S -m "chore: Update changelog"
+git commit -S -m "chore: Update CHANGELOG.md"
 git push
 
 echo ""
