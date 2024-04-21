@@ -2,18 +2,18 @@
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
-use std::clone::Clone;
-use std::cmp::{Eq, Ord};
+use std::{clone::Clone, iter::Peekable};
 
 /// A node in the `Trie`, it holds a value, and a list of children nodes
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
 pub struct TrieNode<K: Eq + Ord + Clone, V> {
     pub value: Option<V>,
+    /// sorted
     pub children: Vec<(K, TrieNode<K, V>)>,
 }
 
-impl<K: Eq + Ord + Clone, V: Clone> TrieNode<K, V> {
+impl<K: Eq + Ord + Clone, V> TrieNode<K, V> {
     pub fn new() -> Self {
         TrieNode {
             value: None,
@@ -22,24 +22,43 @@ impl<K: Eq + Ord + Clone, V: Clone> TrieNode<K, V> {
     }
 
     /// Insert a node in the trie
-    pub fn insert<I: Iterator<Item = K>>(&mut self, mut key: I, value: V) {
+    pub fn insert<I: Iterator<Item = K>>(&mut self, mut key: I, value: V) -> &mut V {
+        let sel = self;
         if let Some(part) = key.next() {
-            if let Some(child) = self.children.iter_mut().find(|child| child.0 == part) {
-                child.1.insert(key, value);
-            } else {
-                let mut new_node = TrieNode::new();
-                new_node.insert(key, value);
-                self.children.push((part, new_node));
+            match sel.children.binary_search_by_key(&&part, |(k, n)| k) {
+                Ok(ix) => sel.children[ix].1.insert(key, value),
+                Err(ix) => {
+                    let mut new_node = TrieNode::new();
+                    new_node.insert(key, value);
+                    sel.children.insert(ix, (part, new_node));
+                    sel.children.get_mut(ix).unwrap().1.value.as_mut().unwrap()
+                }
             }
         } else {
-            self.value = Some(value);
+            sel.value = Some(value);
+            sel.value.as_mut().unwrap()
+        }
+    }
+
+    pub fn remove_subtree<I: Iterator<Item = K>>(&mut self, mut key: Peekable<I>) {
+        if let Some(next) = key.next() {
+            if let Some(ix) = self.children.binary_search_by_key(&&next, |(k, n)| k).ok() {
+                if key.peek().is_none() {
+                    self.children.remove(ix);
+                } else {
+                    self.children[ix].1.remove_subtree(key);
+                }
+            }
         }
     }
 
     /// Recursively find a node searching through children
     pub fn find_node<I: Iterator<Item = K>>(&self, mut key: I) -> Option<&Self> {
         if let Some(p) = key.next() {
-            self.children.iter().find(|c| c.0 == p)?.1.find_node(key)
+            self.children
+                .binary_search_by_key(&&p, |(k, n)| k)
+                .ok() // each prefix must exist
+                .and_then(|f| self.children[f].1.find_node(key))
         } else {
             Some(self)
         }
@@ -47,7 +66,10 @@ impl<K: Eq + Ord + Clone, V: Clone> TrieNode<K, V> {
 
     pub fn find_node_mut<I: Iterator<Item = K>>(&mut self, mut key: I) -> Option<&mut Self> {
         if let Some(p) = key.next() {
-            self.children.iter_mut().find(|c| c.0 == p)?.1.find_node_mut(key)
+            self.children
+                .binary_search_by_key(&&p, |(k, n)| k)
+                .ok() // each prefix must exist
+                .and_then(|f| self.children[f].1.find_node_mut(key))
         } else {
             Some(self)
         }
@@ -66,7 +88,7 @@ impl<K: Eq + Ord + Clone, V: Clone> TrieNode<K, V> {
     }
 }
 
-impl<T: Eq + Ord + Clone, U: Clone> Default for TrieNode<T, U> {
+impl<T: Eq + Ord + Clone, U> Default for TrieNode<T, U> {
     fn default() -> Self {
         Self::new()
     }

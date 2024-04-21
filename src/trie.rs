@@ -5,7 +5,6 @@ use crate::trie_node::TrieNode;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::clone::Clone;
-use std::cmp::{Eq, Ord};
 
 /// Prefix tree object, contains 1 field for the `root` node of the tree
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -15,7 +14,7 @@ pub struct Trie<K: Eq + Ord + Clone, V> {
     root: TrieNode<K, V>,
 }
 
-impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
+impl<K: Eq + Ord + Clone, V> Trie<K, V> {
     /// Creates a new `Trie` object
     ///
     /// # Example
@@ -79,6 +78,11 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
         self.find_node(key).and_then(|node| node.get_value())
     }
 
+    pub fn get_mut<I: Iterator<Item = K>>(&mut self, key: I) -> Option<&mut V> {
+        self.find_node_mut(key)
+            .and_then(|node| Some(node.value.as_mut().unwrap()))
+    }
+
     /// Sets the value pointed by a key
     ///
     /// # Example
@@ -122,13 +126,19 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
     /// assert_eq!(trie.find_prefixes("efghij".bytes()), Vec::<&&str>::new());
     /// assert_eq!(trie.find_prefixes("abz".bytes()), Vec::<&&str>::new());
     /// ```
-    pub fn find_prefixes<I: Iterator<Item = K>>(&self, key: I) -> Vec<&V> {
+
+    pub fn find_prefixes<I: Iterator<Item = K>>(&self, key: I) -> Vec<(usize, &V)> {
         let mut node = &self.root;
         let mut prefixes = Vec::new();
-        for k in key {
-            if let Some(next) = node.children.iter().find(|(ckey, _)| ckey == &k).map(|(_, n)| n) {
+        for (i, k) in key.enumerate() {
+            if let Some((nk, next)) = node
+                .children
+                .binary_search_by_key(&&k, |(k, n)| k)
+                .ok()
+                .and_then(|ix| Some(&node.children[ix]))
+            {
                 if let Some(value) = &next.value {
-                    prefixes.push(value);
+                    prefixes.push((i, value));
                 }
                 node = next;
             } else {
@@ -255,8 +265,12 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
     /// t.insert("test2".bytes(), 43);
     /// assert!(!t.is_empty());
     /// ```
-    pub fn insert<I: Iterator<Item = K>>(&mut self, key: I, value: V) {
-        self.root.insert(key, value);
+    pub fn insert<I: Iterator<Item = K>>(&mut self, key: I, value: V) -> &mut V {
+        self.root.insert(key, value)
+    }
+
+    pub fn remove_subtree<I: Iterator<Item = K>>(&mut self, key: I) {
+        self.root.remove_subtree(key.peekable())
     }
 
     /// Finds the node in the `Trie` for a given key
@@ -289,12 +303,12 @@ impl<K: Eq + Ord + Clone, V: Clone> Trie<K, V> {
     /// }
     /// ```
     pub fn iter(&self) -> TrieIterator<K, V> {
-        TrieIterator::new(self)
+        TrieIterator::new(&self)
     }
 }
 
 /// Implement the `Default` trait for `Trie` since we have a constructor that does not need arguments
-impl<T: Eq + Ord + Clone, U: Clone> Default for Trie<T, U> {
+impl<T: Eq + Ord + Clone, U> Default for Trie<T, U> {
     fn default() -> Self {
         Self::new()
     }
@@ -306,7 +320,7 @@ pub struct TrieIterator<'a, K: Eq + Ord + Clone, V> {
     stack: Vec<(&'a TrieNode<K, V>, Vec<K>)>,
 }
 
-impl<'a, K: Eq + Ord + Clone, V: Clone> TrieIterator<'a, K, V> {
+impl<'a, K: Eq + Ord + Clone, V> TrieIterator<'a, K, V> {
     fn new(trie: &'a Trie<K, V>) -> Self {
         TrieIterator {
             // Start with root node and empty path
@@ -315,9 +329,9 @@ impl<'a, K: Eq + Ord + Clone, V: Clone> TrieIterator<'a, K, V> {
     }
 }
 
-impl<'a, K: Eq + Ord + Clone, V: Clone> Iterator for TrieIterator<'a, K, V> {
+impl<'a, K: Eq + Ord + Clone, V> Iterator for TrieIterator<'a, K, V> {
     // Yield key-value pairs
-    type Item = (Vec<K>, V);
+    type Item = (Vec<K>, &'a V);
     fn next(&mut self) -> Option<Self::Item> {
         while let Some((node, path)) = self.stack.pop() {
             // Push children to the stack with updated path
@@ -328,7 +342,7 @@ impl<'a, K: Eq + Ord + Clone, V: Clone> Iterator for TrieIterator<'a, K, V> {
             }
             // Return value if it exists
             if let Some(ref value) = node.value {
-                return Some((path, value.clone()));
+                return Some((path, value));
             }
         }
         None
