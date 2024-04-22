@@ -148,6 +148,26 @@ impl<K: Eq + Ord + Clone, V> Trie<K, V> {
         prefixes
     }
 
+    pub fn iter_prefixes<I: Iterator<Item = K>>(
+        &mut self,
+        key: I,
+        mut cb: impl FnMut(usize, &mut TrieNode<K, V>),
+    ) {
+        let mut node = &mut self.root;
+        for (i, k) in key.enumerate() {
+            if let Ok(ix) = node.children.binary_search_by_key(&&k, |(k, n)| k) {
+                let (nk, next) = &mut node.children[ix];
+                if let Some(_) = &mut next.value {
+                    cb(i, next);
+                }
+                node = next;
+            } else {
+                cb(i, node);
+                break;
+            }
+        }
+    }
+
     /// Finds the longest prefix in the `Trie` for a given string.
     ///
     /// # Example
@@ -265,8 +285,12 @@ impl<K: Eq + Ord + Clone, V> Trie<K, V> {
     /// t.insert("test2".bytes(), 43);
     /// assert!(!t.is_empty());
     /// ```
-    pub fn insert<I: Iterator<Item = K>>(&mut self, key: I, value: V) -> &mut V {
-        self.root.insert(key, value)
+    pub fn insert<I: Iterator<Item = K>>(
+        &mut self,
+        key: I,
+        value_cb: impl FnMut(&mut TrieNode<K, V>, Option<usize>),
+    ) -> &mut V {
+        self.root.insert(key.enumerate(), value_cb, None)
     }
 
     pub fn remove_subtree<I: Iterator<Item = K>>(&mut self, key: I) {

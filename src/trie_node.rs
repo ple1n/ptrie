@@ -22,21 +22,28 @@ impl<K: Eq + Ord + Clone, V> TrieNode<K, V> {
     }
 
     /// Insert a node in the trie
-    pub fn insert<I: Iterator<Item = K>>(&mut self, mut key: I, value: V) -> &mut V {
-        let sel = self;
-        if let Some(part) = key.next() {
-            match sel.children.binary_search_by_key(&&part, |(k, n)| k) {
-                Ok(ix) => sel.children[ix].1.insert(key, value),
+    pub fn insert<I: Iterator<Item = (usize, K)>>(
+        &mut self,
+        mut key: I,
+        mut value_cb: impl FnMut(&mut TrieNode<K, V>, Option<usize>),
+        cur: Option<usize>,
+    ) -> &mut V {
+        value_cb(self, cur);
+        if let Some((iterx, part)) = key.next() {
+            match self.children.binary_search_by_key(&&part, |(k, n)| k) {
+                Ok(ix) => self.children[ix].1.insert(key, value_cb, Some(iterx)),
                 Err(ix) => {
-                    let mut new_node = TrieNode::new();
-                    new_node.insert(key, value);
-                    sel.children.insert(ix, (part, new_node));
-                    sel.children.get_mut(ix).unwrap().1.value.as_mut().unwrap()
+                    let new_node = TrieNode::new();
+                    self.children.insert(ix, (part, new_node));
+                    self.children
+                        .get_mut(ix)
+                        .unwrap()
+                        .1
+                        .insert(key, value_cb, Some(iterx))
                 }
             }
         } else {
-            sel.value = Some(value);
-            sel.value.as_mut().unwrap()
+            self.value.as_mut().unwrap()
         }
     }
 
