@@ -27,7 +27,7 @@ impl<K: Eq + Ord + Clone, V> TrieNode<K, V> {
         mut key: I,
         mut value_cb: impl FnMut(&mut TrieNode<K, V>, Option<usize>),
         cur: Option<usize>,
-    ) -> &mut V {
+    ) -> Option<&mut V> {
         value_cb(self, cur);
         if let Some((iterx, part)) = key.next() {
             match self.children.binary_search_by_key(&&part, |(k, n)| k) {
@@ -43,7 +43,7 @@ impl<K: Eq + Ord + Clone, V> TrieNode<K, V> {
                 }
             }
         } else {
-            self.value.as_mut().unwrap()
+            self.value.as_mut()
         }
     }
 

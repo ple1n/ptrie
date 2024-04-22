@@ -289,7 +289,7 @@ impl<K: Eq + Ord + Clone, V> Trie<K, V> {
         &mut self,
         key: I,
         value_cb: impl FnMut(&mut TrieNode<K, V>, Option<usize>),
-    ) -> &mut V {
+    ) -> Option<&mut V> {
         self.root.insert(key.enumerate(), value_cb, None)
     }
 
